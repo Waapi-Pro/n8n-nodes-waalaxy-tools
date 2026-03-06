@@ -77,23 +77,26 @@ export class WaalaxyTools implements INodeType {
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
-		const credentials = await this.getCredentials('waalaxyToolsOAuth2Api');
-		const { access_token: accessToken } = credentials.oauthTokenData as { access_token: string };
 
 		for (let i = 0; i < items.length; i++) {
 			const firstName = this.getNodeParameter('firstName', i) as string;
 			const lastName = this.getNodeParameter('lastName', i) as string;
 			const company = this.getNodeParameter('company', i) as string;
 
-			const response = await this.helpers.httpRequest({
-				method: 'GET',
-				url: `${BASE_URL}/api/linkedin-url`,
-				qs: { firstName, lastName, company },
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
+			const response = await this.helpers.httpRequestWithAuthentication.call(
+				this,
+				'waalaxyToolsOAuth2Api',
+				{
+					method: 'GET',
+					url: `${BASE_URL}/api/linkedin-url`,
+					qs: { firstName, lastName, company },
 				},
-				json: true,
-			});
+				{
+					oauth2: {
+						includeCredentialsOnRefreshOnBody: true,
+					},
+				},
+			);
 
 			const json = (
 				typeof response === 'object' && response !== null ? response : { result: response }

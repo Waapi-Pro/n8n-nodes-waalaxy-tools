@@ -51,7 +51,7 @@ export class WaalaxyToolsOAuth2Api implements ICredentialType {
 			displayName: 'Authentication',
 			name: 'authentication',
 			type: 'hidden',
-			default: 'header',
+			default: 'body',
 		},
 	];
 }
