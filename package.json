@@ -12,7 +12,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/Waapi-Pro/n8n-nodes-waalaxy-tools.git"
+        "url": "https://github.com/Waapi-Pro/n8n-nodes-waalaxy-tools"
     },
     "scripts": {
         "build": "n8n-node build",
