@@ -12,7 +12,7 @@ export class WaalaxyToolsOAuth2Api implements ICredentialType {
 		dark: 'file:../icons/logo-api-gradient-dark.svg',
 	};
 
-	documentationUrl = 'https://google.com';
+	documentationUrl = 'https://www.npmjs.com/package/@waapi/n8n-nodes-waalaxy-tools';
 
 	properties: INodeProperties[] = [
 		{
