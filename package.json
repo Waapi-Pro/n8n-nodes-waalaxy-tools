@@ -1,6 +1,6 @@
 {
     "name": "@waapi/n8n-nodes-waalaxy-tools",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "description": "This is an n8n community node. It lets you use Waalaxy Tools in your n8n workflows.",
     "license": "MIT",
     "keywords": [
