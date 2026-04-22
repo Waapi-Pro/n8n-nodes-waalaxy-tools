@@ -14,6 +14,7 @@
         "type": "git",
         "url": "https://github.com/Waapi-Pro/n8n-nodes-waalaxy-tools"
     },
+    "homepage": "https://github.com/Waapi-Pro/n8n-nodes-waalaxy-tools#readme",
     "scripts": {
         "build": "n8n-node build",
         "build:watch": "tsc --watch",
@@ -26,6 +27,10 @@
     "files": [
         "dist"
     ],
+    "publishConfig": {
+        "access": "public",
+        "provenance": true
+    },
     "n8n": {
         "n8nNodesApiVersion": 1,
         "strict": true,
@@ -37,13 +42,13 @@
         ]
     },
     "devDependencies": {
-        "@n8n/node-cli": "*",
+        "@n8n/node-cli": "^0.23.1",
         "eslint": "9.32.0",
         "prettier": "3.6.2",
         "release-it": "^19.0.4",
         "typescript": "5.9.2"
     },
     "peerDependencies": {
-        "n8n-workflow": "*"
+        "n8n-workflow": "^2.16.0"
     }
 }

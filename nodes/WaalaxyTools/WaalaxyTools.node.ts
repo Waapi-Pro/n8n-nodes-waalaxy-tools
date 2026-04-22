@@ -1,4 +1,5 @@
 import {
+	NodeConnectionTypes,
 	type IExecuteFunctions,
 	type INodeExecutionData,
 	type INodeType,
@@ -23,8 +24,8 @@ export class WaalaxyTools implements INodeType {
 			name: 'Waalaxy Tools',
 		},
 		usableAsTool: true,
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: [NodeConnectionTypes.Main],
+		outputs: [NodeConnectionTypes.Main],
 		credentials: [
 			{
 				name: 'waalaxyToolsOAuth2Api',
@@ -41,8 +42,9 @@ export class WaalaxyTools implements INodeType {
 					{
 						name: 'Find LinkedIn URL',
 						value: 'findLinkedinUrl',
-						action: 'Find a linked in profile url',
-						description: 'Find a linked in profile URL by first name, last name and company',
+						// eslint-disable-next-line n8n-nodes-base/node-param-operation-option-action-miscased
+						action: 'Find LinkedIn profile URL',
+						description: 'Find a LinkedIn profile URL by first name, last name, and company',
 					},
 				],
 				default: 'findLinkedinUrl',
@@ -79,31 +81,42 @@ export class WaalaxyTools implements INodeType {
 		const returnData: INodeExecutionData[] = [];
 
 		for (let i = 0; i < items.length; i++) {
-			const firstName = this.getNodeParameter('firstName', i) as string;
-			const lastName = this.getNodeParameter('lastName', i) as string;
-			const company = this.getNodeParameter('company', i) as string;
+			try {
+				const firstName = this.getNodeParameter('firstName', i) as string;
+				const lastName = this.getNodeParameter('lastName', i) as string;
+				const company = this.getNodeParameter('company', i) as string;
 
-			const response = await this.helpers.httpRequestWithAuthentication.call(
-				this,
-				'waalaxyToolsOAuth2Api',
-				{
-					method: 'GET',
-					url: `${BASE_URL}/api/linkedin-url`,
-					qs: { firstName, lastName, company },
-				},
-				{
-					oauth2: {
-						includeCredentialsOnRefreshOnBody: true,
+				const response = await this.helpers.httpRequestWithAuthentication.call(
+					this,
+					'waalaxyToolsOAuth2Api',
+					{
+						method: 'GET',
+						url: `${BASE_URL}/api/linkedin-url`,
+						qs: { firstName, lastName, company },
 					},
-				},
-			);
+					{
+						oauth2: {
+							includeCredentialsOnRefreshOnBody: true,
+						},
+					},
+				);
 
-			const json = (
-				typeof response === 'object' && response !== null ? response : { result: response }
-			) as {
-				[key: string]: never;
-			};
-			returnData.push({ json });
+				const json = (
+					typeof response === 'object' && response !== null ? response : { result: response }
+				) as {
+					[key: string]: never;
+				};
+				returnData.push({ json, pairedItem: { item: i } });
+			} catch (error) {
+				if (this.continueOnFail()) {
+					returnData.push({
+						json: { error: (error as Error).message },
+						pairedItem: { item: i },
+					});
+					continue;
+				}
+				throw error;
+			}
 		}
 
 		return [returnData];
