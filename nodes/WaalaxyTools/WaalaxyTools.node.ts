@@ -1,9 +1,11 @@
 import {
+	NodeApiError,
 	NodeConnectionTypes,
 	type IExecuteFunctions,
 	type INodeExecutionData,
 	type INodeType,
 	type INodeTypeDescription,
+	type JsonObject,
 } from 'n8n-workflow';
 
 const BASE_URL = 'https://waalaxy-tools-api-01b7e745bb4d.herokuapp.com';
@@ -115,7 +117,7 @@ export class WaalaxyTools implements INodeType {
 					});
 					continue;
 				}
-				throw error;
+				throw new NodeApiError(this.getNode(), error as JsonObject);
 			}
 		}
 
